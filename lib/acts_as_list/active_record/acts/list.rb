@@ -218,10 +218,11 @@ module ActiveRecord
             item ? item.send(position_column) : acts_as_list_top - 1
           end
 
-          # Returns the bottom item
+          # Returns the bottom item contained within the list.
           def bottom_item(except = nil)
             conditions = scope_condition
             conditions = "#{conditions} AND #{self.class.primary_key} != #{except.id}" if except
+            conditions = "#{conditions} AND #{position_column} IS NOT NULL"
             acts_as_list_class.find(:first, :conditions => conditions, :order => "#{position_column} DESC")
           end
 
